@@ -2,13 +2,10 @@
   <div class="card headline-card">
     <div v-if="isDataLoaded && shouldShowLogin" class="card-wrapper user-card">
       <div v-if="settingsAllowed" class="inner-card">
-        <a href="/settings#profile-main" class="person-button action button"
-          @click.prevent="navigateTo('/settings', '#profile-main')"
-          @mouseenter="showTooltip($event, $t('index.settingsHover'))" @mouseleave="hideTooltip">
+        <button class="person-button action button">
           <i class="material-icons">person</i>
           {{ user.username }}
-          <i aria-label="settings" class="material-icons">settings</i>
-        </a>
+        </button>
       </div>
       <div v-else-if="user.username === 'anonymous' && shouldShowLogin" @click="navigateToLogin" class="inner-card">
         <button class="person-button action button">
@@ -30,34 +27,15 @@
       </div>
     </div>
 
-    <div v-if="!disableQuickToggles" class="card-wrapper" @mouseleave="hideTooltip">
-      <div class="quick-toggles" :class="{ 'extra-padding': !hasCreateOptions }">
-        <div class="clickable" :class="{ active: user?.singleClick }" @click="toggleClick"
-          @mouseenter="showTooltip($event, $t('index.toggleClick'))" @mouseleave="hideTooltip" v-if="!isInvalidShare">
-          <i class="material-icons">ads_click</i>
-        </div>
-        <div aria-label="Toggle Theme" v-if="darkModeTogglePossible" class="clickable"
-          :class="{ active: user?.darkMode }" @click="toggleDarkMode"
-          @mouseenter="showTooltip($event, $t('index.toggleDark'))" @mouseleave="hideTooltip">
-          <i class="material-icons">dark_mode</i>
-        </div>
-        <div class="clickable" :class="{ active: isStickySidebar }" @click="toggleSticky"
-          @mouseenter="showTooltip($event, $t('index.toggleSticky'))" @mouseleave="hideTooltip" v-if="!isMobile">
-          <i class="material-icons">push_pin</i>
-        </div>
-      </div>
-    </div>
 
-    <!-- Sidebar file actions -->
-    <transition v-if="shareInfo.shareType !== 'upload'" name="expand" @before-enter="beforeEnter" @enter="enter"
-      @leave="leave">
-      <div v-if="!hideSidebarFileActions && isListingView" class="card-wrapper">
-        <button @click="openContextMenu" aria-label="File-Actions" data-testid="file-actions-button" class="action file-actions">
-          <i class="material-icons">add</i>
-          {{ $t("sidebar.fileActions") }}
-        </button>
-      </div>
-    </transition>
+
+
+    <div v-if="!hideSidebarFileActions && isListingView && shareInfo.shareType !== 'upload'" class="card-wrapper">
+      <button @click="showUploadHover" aria-label="Upload Files" data-testid="upload-button" class="action file-actions">
+        <i class="material-icons">cloud_upload</i>&nbsp;
+        {{ $t("general.upload") }}
+      </button>
+    </div>
     <!-- Hidden marker for tests to detect when file actions should be available -->
     <div v-if="isDataLoaded && isListingView && shareInfo.shareType !== 'upload'" 
          data-testid="file-actions-ready" 
@@ -66,8 +44,7 @@
     </div>
   </div>
 
-  <!-- Sidebar Links Component (replaces sources) -->
-  <SidebarLinks />
+
 </template>
 
 <script>
@@ -217,6 +194,9 @@ export default {
 
     // Logout the user
     logout: auth.logout,
+    showUploadHover() {
+      mutations.showHover("upload");
+    },
     beforeEnter(el) {
       el.style.maxHeight = '0';
       el.style.opacity = '0';

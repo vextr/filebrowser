@@ -1,14 +1,9 @@
 <template>
   <header v-if="!isOnlyOffice" :class="['flexbar', { 'dark-mode-header': isDarkMode }]">
-    <action
-      v-if="!disableNavButtons"
-      icon="close_back"
-      :label="$t('general.close')"
-      :disabled="isDisabledMultiAction"
-      @action="multiAction"
-    />
+
     <search v-if="showSearch" />
     <title v-else class="topTitle">{{ getTopTitle }}</title>
+    <div style="flex: 1;"></div>
     <action
       v-if="isListingView && !disableNavButtons"
       class="menu-button"
