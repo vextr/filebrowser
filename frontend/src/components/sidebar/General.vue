@@ -52,12 +52,10 @@ import * as auth from "@/utils/auth";
 import { globalVars } from "@/utils/constants";
 import { state, getters, mutations } from "@/store";
 import { fromNow } from "@/utils/moment";
-import SidebarLinks from "./Links.vue";
 
 export default {
   name: "SidebarGeneral",
   components: {
-    SidebarLinks,
   },
   data() {
     return {};
