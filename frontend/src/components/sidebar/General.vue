@@ -30,7 +30,7 @@
 
 
 
-    <div v-if="!hideSidebarFileActions && isListingView && shareInfo.shareType !== 'upload'" class="card-wrapper">
+    <div v-if="isDataLoaded && !hideSidebarFileActions && isListingView && shareInfo.shareType !== 'upload'" class="card-wrapper">
       <button @click="showUploadHover" aria-label="Upload Files" data-testid="upload-button" class="action file-actions">
         <i class="material-icons">cloud_upload</i>&nbsp;
         {{ $t("general.upload") }}
@@ -64,17 +64,15 @@ export default {
     // Check if data is loaded before showing user info
     isDataLoaded() {
       if (getters.isShare()) {
-        // For shares, wait for shareInfo to be loaded
-        return state.shareInfo !== null && state.shareInfo !== undefined;
+        // For shares, wait for shareInfo to be loaded with a valid hash
+        return !!state.shareInfo?.hash;
       }
-      // For regular files, user should be loaded
-      return state.user !== null && state.user !== undefined;
+      // For regular users, wait for a valid username
+      return !!state.user?.username;
     },
     hasCreateOptions() {
-      if (getters.isShare()) {
-        return state.shareInfo?.allowCreate
-      }
-      return state.user?.permissions?.create || state.user?.permissions?.share || state.user?.permissions?.admin;
+      const perms = getters.permissions();
+      return perms.create || perms.admin;
     },
     shareInfo: () => state.shareInfo,
     disableQuickToggles: () => state.user?.disableQuickToggles,

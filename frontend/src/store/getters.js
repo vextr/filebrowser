@@ -136,7 +136,7 @@ export const getters = {
     }
     return false
   },
-  isAdmin: () => state.user.permissions?.admin == true,
+  isAdmin: () => getters.permissions().admin,
   isFiles: () => state.route.path.startsWith('/files'),
   isListing: () => getters.isFiles() || (getters.isShare() && state.req.type === 'directory'),
   selectedCount: () =>
@@ -421,7 +421,7 @@ export const getters = {
         return true
       }
     } else {
-      if (!state.user.permissions.download) {
+      if (!getters.permissions().download) {
         return true
       }
     }
@@ -549,23 +549,25 @@ export const getters = {
     if (getters.isShare()) {
       return {
         share: false,
-        modify: state.shareInfo?.allowModify,
-        create: state.shareInfo?.allowCreate,
-        delete: state.shareInfo?.allowDelete,
+        modify: state.shareInfo?.allowModify || false,
+        create: state.shareInfo?.allowCreate || false,
+        delete: state.shareInfo?.allowDelete || false,
         download: !state.shareInfo?.disableDownload,
         admin: false,
         api: false,
         realtime: false,
       };
     }
+    const p = state.user?.permissions || state.user?.perm || {};
     return {
-      share: state.user?.permissions?.share,
-      modify: state.user?.permissions?.modify,
-      create: state.user?.permissions?.create,
-      delete: state.user?.permissions?.delete,
-      download: state.user?.permissions?.download,
-      admin: state.user?.permissions?.admin,
-      api: state.user?.permissions?.api,
+      share: p.share || false,
+      modify: p.modify || false,
+      create: p.create || false,
+      delete: p.delete || false,
+      download: p.download !== undefined ? p.download : true,
+      admin: p.admin || false,
+      api: p.api || false,
+      realtime: p.realtime || false,
     };
   },
   previewPerms: () => {

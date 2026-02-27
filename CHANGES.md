@@ -34,4 +34,25 @@ This document summarizes the modifications applied to the `filebrowser` frontend
 ## 6. Removed Settings Cogwheel and Link from Username
 
 *   **File:** `frontend/src/components/sidebar/General.vue`
-*   **Description:** The username display in the sidebar was modified. The `<a>` tag that linked to the settings page and contained the cogwheel icon was replaced with a simpler `<button>` tag that only displays the person icon and the username, effectively removing the link and the cogwheel.
+*   **Description:** ## 7. Robust Permission Handling
+
+*   **File:** `frontend/src/store/getters.js`
+*   **Description:**
+    *   Updated the `permissions` getter to handle both legacy (`perm`) and standard (`permissions`) field names from the backend.
+    *   Added default `false` values for all permission bits to prevent `undefined` checks.
+    *   Updated all permission-dependent getters (like `isAdmin`, `fileViewingDisabled`, etc.) to use this unified `permissions()` getter for better consistency.
+
+## 8. Improved Upload Button Visibility
+
+*   **File:** `frontend/src/components/sidebar/General.vue`
+*   **Description:**
+    *   Added an `isDataLoaded` check to the "Upload" button container. This ensures the button only renders once the user's profile and permissions are fully loaded from the API, preventing it from flickering or disappearing during page load.
+    *   Modified `isDataLoaded` to verify the presence of a `username` or `share hash` for more reliable state detection.
+
+## 9. Backend Permission & Default Fixes
+
+*   **File:** `backend/common/settings/settings.go`
+*   **Description:**
+    *   Updated `AdminPerms()` to explicitly include all permissions (`Create`, `Delete`, `Download`, `Realtime`) by default.
+    *   Fixed `ApplyUserDefaults()` to correctly propagate several settings from `config.yaml` to the user object, including `HideSidebarFileActions`, `EditorQuickSave`, and `DeleteWithoutConfirming`.
+    *   Ensured that the `hideSidebarFileActions` setting in `config.yaml` is correctly respected by both the backend and frontend.

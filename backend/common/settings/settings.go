@@ -57,10 +57,14 @@ func GetSettingsConfig(nameType string, Value string) string {
 
 func AdminPerms() users.Permissions {
 	return users.Permissions{
-		Modify: true,
-		Share:  true,
-		Admin:  true,
-		Api:    true,
+		Modify:   true,
+		Share:    true,
+		Admin:    true,
+		Api:      true,
+		Create:   true,
+		Delete:   true,
+		Download: true,
+		Realtime: true,
 	}
 }
 
@@ -100,6 +104,11 @@ func ApplyUserDefaults(u *users.User) {
 
 	u.ShowHidden = Config.UserDefaults.ShowHidden
 	u.DateFormat = Config.UserDefaults.DateFormat
+	u.HideSidebarFileActions = Config.UserDefaults.HideSidebarFileActions
+	u.EditorQuickSave = Config.UserDefaults.EditorQuickSave
+	u.DisableQuickToggles = Config.UserDefaults.DisableQuickToggles
+	u.DisableSearchOptions = Config.UserDefaults.DisableSearchOptions
+	u.DeleteWithoutConfirming = Config.UserDefaults.DeleteWithoutConfirming
 	u.DisableViewingExt = Config.UserDefaults.DisableViewingExt
 	u.ThemeColor = Config.UserDefaults.ThemeColor
 	u.GallerySize = Config.UserDefaults.GallerySize
